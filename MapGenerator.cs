@@ -12,39 +12,64 @@ public class MapGenerator : MonoBehaviour {
     private int[,] _floorInfo;
     private int[,] _mapInfo;//0:none -1:wall N:room N
 
+	private class cCorridorExit {
+		public int X;
+		public int Z;
+		public int deltaX;
+		public int deltaZ;
+	}
+
     private class cRoom {
 		public cRoom (
+			int idValue,
 			int xValue,
 			int zValue,
 			int widthValue,
 			int lengthValue
 		) {
-			id = currentRoomId;
-			exit = 0;
+			id = idValue;
+			x = xValue;
+			z = zValue;
+			xWidth = widthValue;
+			zLength = lengthValue;
 		}
         public int id;
         public int x;
         public int z;
         public int xWidth;
-        public int zLength;
-        public int exit;   
+        public int zLength; 
     }
 
     private class cCorridor {
 		public cCorridor (
+			int idValue,
+			int xValue,
+			int zValue,
+			int delX,
+			int delZ,
+			int corridorLength
 		) {
-			
+			id = idValue;
+			x = xValue;
+			z = zValue;
+			deltaX = delX;
+			deltaZ = delZ;
+			exitList = new List<cCorridorExit>();
 		}
+		public int id;
         public int x;
         public int z;
-        public int endX;
-        public int endZ;
-        public int exit;
+        public int deltaX;
+        public int deltaZ;
+		public List<cCorridorExit> exitList;
     }
 
-	int currentRoomId = 0;
+	int currentRoomId;
+	int currentCorridorId;
     cRoom currentRoom;
+	cCorridor currentCorridor;
     List<cRoom> roomList;
+	List<cCorridor> corridorList;
 
     void Awake() {
         Create();
@@ -77,9 +102,11 @@ public class MapGenerator : MonoBehaviour {
 
     void GenerateMap() {
         currentRoomId = 1;
+		currentCorridorId = 1;
         roomList = new List<cRoom>();
 
 		currentRoom = new cRoom(
+			currentRoomId,
 			Random.Range(_mapX / 3, _mapX / 3 * 2),
 			Random.Range(_mapZ / 3, _mapZ / 3 * 2),
 			Random.Range(_roomMinRange, _roomMaxRange),
@@ -167,6 +194,19 @@ public class MapGenerator : MonoBehaviour {
 			Debug.LogError ("Invalid Direction!");
 			break;
 		}
+		currentCorridor = new cCorridor (
+			currentRoomId,
+			wallX + deltaX,
+			wallZ + deltaZ,
+			deltaX,
+			deltaZ
+		);
+
+
         return true;
     }
+
+	bool CheckCorridorSpace (int startX, int startZ, int delX, int delZ, int corridorLength) {
+		
+	}
 }
