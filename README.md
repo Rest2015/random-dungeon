@@ -1,2 +1,2 @@
-# dungeon
-Random dungeon generator for Unity3D.
+# map
+Random map generator for Unity3D.
